@@ -10,12 +10,12 @@ const Layout = ({ children }) => {
     <div className="layout">
       <nav className="top-nav">
         <div className="icon">
-        <Link to="/">
+        <Link to="/"> {/* link to slot machine */}
           <FaGamepad />
           </Link>
         </div>
         <div className="nav-links">
-          <span>Shop</span>
+          <Link to="/shop">Shop</Link>
           <Link to="/leaderboards">
             <FaTrophy />
           </Link>
