@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Shop.scss';
 
 const Shop = () => {
-    const [creditAmount, setCreditAmount] = useState(100); // Default credit amount
+    const [creditAmount, setCreditAmount] = useState(100); 
 
     return (
         <div className="shop-container">

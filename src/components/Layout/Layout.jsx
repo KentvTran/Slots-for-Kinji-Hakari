@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
     <div className="layout">
       <nav className="top-nav">
         <div className="icon">
-        <Link to="/"> {/* link to slot machine */}
+        <Link to="/slots"> {/* link to slot machine */}
           <FaGamepad />
           </Link>
         </div>
