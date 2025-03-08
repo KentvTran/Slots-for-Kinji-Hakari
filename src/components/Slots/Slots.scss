@@ -1,0 +1,14 @@
+.slots-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(45deg, #f5e6ff, #e0bbff);
+    font-family: 'Anime Ace', sans-serif;
+  
+    canvas {
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(192, 162, 255, 0.3);
+    }
+  }
+  

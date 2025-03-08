@@ -1,15 +1,15 @@
 .shop-container {
     text-align: center;
-    background: linear-gradient(to bottom, #1a1a2e, #16213e); 
-    color: white;
+    background: linear-gradient(to bottom, #e6e6fa, #d8bfd8); 
+    color: #4b0082; 
     padding: 40px;
     padding-top: 80px; 
     border-radius: 12px;
     max-width: 900px;
     margin: 40px auto;
     font-family: 'Arial', sans-serif;
+    box-shadow: 0 4px 20px rgba(147, 112, 219, 0.3); 
 }
-
 
 .shop-title {
     font-size: 32px;
@@ -17,12 +17,14 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 10px;
+    color: #6a5acd; 
 }
 
 .shop-subtitle {
     font-size: 18px;
     margin-bottom: 20px;
     opacity: 0.8;
+    color: #9370db; 
 }
 
 .shop-items {
@@ -33,12 +35,12 @@
 }
 
 .shop-item {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.7); 
     border-radius: 12px;
     padding: 20px;
     width: 250px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(147, 112, 219, 0.2); 
     transition: transform 0.3s ease;
 }
 
@@ -55,7 +57,7 @@
 .item-image-placeholder {
     width: 80px;
     height: 80px;
-    background: #0f3460;
+    background: #dda0dd;
     border-radius: 10px;
     margin-bottom: 10px;
 }
@@ -63,11 +65,12 @@
 h2 {
     font-size: 20px;
     margin-bottom: 5px;
+    color: #6a5acd; 
 }
 
 .item-price {
     font-size: 18px;
-    color: #f9a826;
+    color: #ba55d3; 
     font-weight: bold;
     margin-bottom: 10px;
 }
@@ -78,22 +81,24 @@ h2 {
     font-size: 16px;
     text-align: center;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #9370db;
+    background: rgba(255, 255, 255, 0.8); 
     margin-bottom: 10px;
+    color: #4b0082; 
 }
 
 .buy-button {
-    background: #f9a826;
-    color: black;
+    background: #ba55d3; 
+    color: white;
     font-size: 16px;
     padding: 10px 20px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    transition: 0.3s;
+    transition: background 0.3s ease;
 }
 
 .buy-button:hover {
-    background: #ffcc00;
+    background: #9370db; 
 }
