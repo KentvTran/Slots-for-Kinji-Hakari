@@ -7,6 +7,7 @@ node_modules/
 .o
 .ob
 .exe
+.env
 
 # dependencies
 /node_modules
