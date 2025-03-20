@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import Phaser from "phaser"
 import "./Slots.scss"
 
-const SlotsGame = () => {
+const Slots = () => {
   const gameRef = useRef(null)
   const [gameStatus, setGameStatus] = useState("Loading...")
 
@@ -594,5 +594,5 @@ const SlotsGame = () => {
   )
 }
 
-export default SlotsGame
+export default Slots
 
