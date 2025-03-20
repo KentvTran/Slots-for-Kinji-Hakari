@@ -1,5 +1,4 @@
 /package-lock.json
-/package.json
 #standard ignore
 node_modules/
 .history
@@ -7,7 +6,7 @@ node_modules/
 .o
 .ob
 .exe
-.env
+/.env
 
 # dependencies
 /node_modules
