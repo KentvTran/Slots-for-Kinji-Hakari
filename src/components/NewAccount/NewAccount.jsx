@@ -12,13 +12,13 @@ const NewAccount = () => {
     const { setUser } = useAuth();
     const navigate = useNavigate();
 
-    // ✅ Function to check if the email is valid
+    // Function to check if the email is valid
     const isEmailValid = (email) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
     };
 
-    // ✅ Function to check password requirements (8+ chars, special symbol, number)
+    // Function to check password requirements (8+ chars, special symbol, number)
     const isPasswordValid = (pwd) => {
         return (
             pwd.length >= 8 &&
@@ -27,7 +27,7 @@ const NewAccount = () => {
         );
     };
 
-    // ✅ Check if form is valid
+    // Check if form is valid
     const isFormValid = 
         isEmailValid(email) &&
         isPasswordValid(password) &&
