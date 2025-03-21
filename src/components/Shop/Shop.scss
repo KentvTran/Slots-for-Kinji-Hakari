@@ -1,104 +1,299 @@
+// Variables - Purple Shades
+$purple-100: #e6e6fa;
+$purple-200: #d8bfd8;
+$purple-300: #ba55d3;
+$purple-400: #9370db;
+$purple-500: #6a5acd;
+$purple-600: #4b0082;
+$purple-700: #3a006b;
+$purple-800: #290054;
+$purple-900: #18003d;
+
+// Category-specific colors (all purple shades)
+$character-color: $purple-500;
+$accessory-color: $purple-400;
+$animation-color: $purple-300;
+$background-color: $purple-600;
+$effect-color: $purple-700;
+
+// Main Container
 .shop-container {
-    text-align: center;
-    background: linear-gradient(to bottom, #e6e6fa, #d8bfd8); 
-    color: #4b0082; 
-    padding: 40px;
-    padding-top: 80px; 
-    border-radius: 12px;
-    max-width: 900px;
-    margin: 40px auto;
-    font-family: 'Arial', sans-serif;
-    box-shadow: 0 4px 20px rgba(147, 112, 219, 0.3); 
+  min-height: 100vh;
+  background: linear-gradient(to bottom, $purple-100, $purple-200);
+  color: $purple-900;
+  padding: 1.5rem;
+  font-family: 'Arial', sans-serif;
 }
 
-.shop-title {
-    font-size: 32px;
+// Header
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  
+  .shop-title {
+    font-size: 2rem;
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 10px;
-    color: #6a5acd; 
-}
-
-.shop-subtitle {
-    font-size: 18px;
-    margin-bottom: 20px;
-    opacity: 0.8;
-    color: #9370db; 
-}
-
-.shop-items {
+  }
+  
+  .credits-section {
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.shop-item {
-    background: rgba(255, 255, 255, 0.7); 
-    border-radius: 12px;
-    padding: 20px;
-    width: 250px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(147, 112, 219, 0.2); 
-    transition: transform 0.3s ease;
-}
-
-.shop-item:hover {
-    transform: scale(1.05);
-}
-
-.item-content {
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 1rem;
+    
+    .credits-display {
+      background-color: rgba(255, 255, 255, 0.7);
+      border: 1px solid $purple-300;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      color: $purple-600;
+    }
+    
+    .buy-credits-btn {
+      background-color: $purple-500;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: $purple-600;
+      }
+    }
+  }
 }
 
-.item-image-placeholder {
-    width: 80px;
-    height: 80px;
-    background: #dda0dd;
-    border-radius: 10px;
-    margin-bottom: 10px;
+// Shop Content
+.shop-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-h2 {
-    font-size: 20px;
-    margin-bottom: 5px;
-    color: #6a5acd; 
-}
-
-.item-price {
-    font-size: 18px;
-    color: #ba55d3; 
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.credit-input {
-    width: 80px;
-    padding: 5px;
-    font-size: 16px;
-    text-align: center;
-    border-radius: 5px;
-    border: 1px solid #9370db;
-    background: rgba(255, 255, 255, 0.8); 
-    margin-bottom: 10px;
-    color: #4b0082; 
-}
-
-.buy-button {
-    background: #ba55d3; 
+// Shop Section
+.shop-section {
+  background-color: rgba($purple-300, 0.1);
+  backdrop-filter: blur(4px);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  
+  .section-header {
+    background-color: rgba($purple-500, 0.8);
     color: white;
-    font-size: 16px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease;
+    padding: 0.75rem 1rem;
+    
+    h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      margin: 0;
+    }
+  }
 }
 
-.buy-button:hover {
-    background: #9370db; 
+// Featured Items
+.featured-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .battle-pass-item {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, $purple-400, $purple-600);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+    
+    .item-details {
+      padding: 2rem;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      
+      h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 0 1rem 0;
+      }
+      
+      .item-price {
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      
+      .purchase-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        align-self: flex-end;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+  
+  .regular-item {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+    
+    &.character {
+      background: linear-gradient(135deg, lighten($character-color, 10%), $character-color);
+    }
+    
+    &.accessory {
+      background: linear-gradient(135deg, lighten($accessory-color, 10%), $accessory-color);
+    }
+    
+    &.animation {
+      background: linear-gradient(135deg, lighten($animation-color, 10%), $animation-color);
+    }
+    
+    &.background {
+      background: linear-gradient(135deg, lighten($background-color, 20%), $background-color);
+    }
+    
+    &.effect {
+      background: linear-gradient(135deg, lighten($effect-color, 20%), $effect-color);
+    }
+    
+    .item-details {
+      padding: 1.5rem;
+      color: white;
+      
+      h3 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin: 0 0 0.5rem 0;
+      }
+      
+      .item-category {
+        font-size: 0.875rem;
+        opacity: 0.8;
+        margin-bottom: 0.5rem;
+      }
+      
+      .item-price {
+        font-weight: bold;
+        font-size: 1.125rem;
+      }
+    }
+  }
 }
+
+// Daily Items
+.daily-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
+  .daily-item {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+    
+    &.character {
+      background: linear-gradient(135deg, lighten($character-color, 10%), $character-color);
+    }
+    
+    &.accessory {
+      background: linear-gradient(135deg, lighten($accessory-color, 10%), $accessory-color);
+    }
+    
+    &.animation {
+      background: linear-gradient(135deg, lighten($animation-color, 10%), $animation-color);
+    }
+    
+    &.background {
+      background: linear-gradient(135deg, lighten($background-color, 20%), $background-color);
+    }
+    
+    &.effect {
+      background: linear-gradient(135deg, lighten($effect-color, 20%), $effect-color);
+    }
+    
+    .item-details {
+      padding: 1rem;
+      color: white;
+      
+      h3 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0 0 0.25rem 0;
+      }
+      
+      .item-category {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        margin-bottom: 0.25rem;
+      }
+      
+      .item-price {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Footer
+.shop-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: $purple-700;
+  font-size: 0.875rem;
+  
+  p {
+    &:before {
+      content: "ℹ️";
+      margin-right: 0.5rem;
+    }
+  }
+}
+
