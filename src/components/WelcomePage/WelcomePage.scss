@@ -7,13 +7,13 @@
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../../assets/hakari-background.png') center/cover no-repeat;
+    background: url("../../assets/hakari-background.png") center/cover no-repeat;
     background-size: contain;
     background-position: center;
     opacity: 0.5;
@@ -30,6 +30,28 @@
       font-weight: bold;
       color: #4b0082;
       margin: 0;
+    }
+
+    .login-button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 20px;
+      font-weight: bold;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+
+      &:hover {
+        background-color: #55009e;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
     }
   }
 }

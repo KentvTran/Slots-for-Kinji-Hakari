@@ -9,19 +9,46 @@ const NewAccount = () => {
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [error, setError] = useState(null);
-    const { setUser } = useAuth();  // ✅ Ensure useAuth() returns setUser
+    const { setUser } = useAuth();
     const navigate = useNavigate();
+
+    // Function to check if the email is valid
+    const isEmailValid = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    };
+
+    // Function to check password requirements (8+ chars, special symbol, number)
+    const isPasswordValid = (pwd) => {
+        return (
+            pwd.length >= 8 &&
+            /[!@#$%^&*(),.?":{}|<>]/.test(pwd) &&  // Must contain a special character
+            /\d/.test(pwd)                         // Must contain a number (0-9)
+        );
+    };
+
+    // Check if form is valid
+    const isFormValid = 
+        isEmailValid(email) &&
+        isPasswordValid(password) &&
+        password === repeatPassword;
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        if (!isEmailValid(e.target.value)) {
+            e.target.setCustomValidity("Please enter a valid email address.");
+        } else {
+            e.target.setCustomValidity(""); // Reset validation message
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password !== repeatPassword) {
-            setError("Passwords do not match");
-            return;
-        }
+        if (!isFormValid) return; // Prevents invalid submission
         try {
             const userCredential = await doCreateUserWithEmailAndPassword(email, password);
-            setUser(userCredential.user); // ✅ Now setUser should work
-            navigate("/"); // Redirect to home after sign-up
+            setUser(userCredential.user);
+            navigate("/");
         } catch (err) {
             setError(err.message);
         }
@@ -40,7 +67,7 @@ const NewAccount = () => {
                             placeholder="Enter your email"
                             className="input"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                             required
                         />
                     </div>
@@ -55,6 +82,11 @@ const NewAccount = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+                        {!isPasswordValid(password) && password.length > 0 && (
+                            <p className="password-hint">
+                                Password must be at least **8 characters** long, contain a **special symbol**, and at least **one number**.
+                            </p>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -67,9 +99,16 @@ const NewAccount = () => {
                             onChange={(e) => setRepeatPassword(e.target.value)}
                             required
                         />
+                        {repeatPassword.length > 0 && password !== repeatPassword && (
+                            <p className="password-hint">Passwords do not match.</p>
+                        )}
                     </div>
 
-                    <button type="submit" className="submit-btn">
+                    <button 
+                        type="submit" 
+                        className={`submit-btn ${!isFormValid ? "disabled" : ""}`} 
+                        disabled={!isFormValid}
+                    >
                         Sign Up
                     </button>
                 </form>
