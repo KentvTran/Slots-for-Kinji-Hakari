@@ -8,6 +8,8 @@ import Slots from './components/Slots/Slots';
 import Layout from './components/Layout/Layout';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import NewAccount from './components/NewAccount/NewAccount';
+import Settings from './components/Settings/Settings';
+import Trade from './components/Trade/Trade';
 import { AuthProvider } from './contexts/authContext';
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
             <Route path="/shop" element={<Shop />} /> 
             <Route path="/forgot-password" element={<ForgotPassword />} /> 
             <Route path="/new-account" element={<NewAccount />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/trade" element={<Trade />} />
           </Routes>
         </Layout>
       </Router>
