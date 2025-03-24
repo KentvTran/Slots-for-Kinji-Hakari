@@ -1,0 +1,258 @@
+// Color Variables
+$purple-100: #e6e6fa;
+$purple-200: #d8bfd8;
+$purple-300: #ba55d3;
+$purple-400: #9370db;
+$purple-500: #6a5acd;
+$purple-600: #4b0082;
+$purple-700: #3a006b;
+$purple-800: #290054;
+$purple-900: #18003d;
+
+// Category-specific colors (all purple shades)
+$character-color: $purple-500;
+$accessory-color: $purple-400;
+$animation-color: $purple-300;
+$background-color: $purple-600;
+$effect-color: $purple-700;
+
+.trade-container {
+    display: flex;
+    flex-direction: column;
+    background-color: $purple-100; // Dark background color
+    color: white;
+    gap: 15px;
+
+    .available-trade{
+        color: #29042e;
+      }
+  
+    .trade-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      
+    .nightmarket-header {
+        color: #29042e; 
+      }
+     
+      h1 {
+        font-size: 2rem;
+      }
+  
+      .credits-section {
+        display: flex;
+        align-items: center;
+  
+        .credits-display {
+          font-size: 1.2rem;
+          margin-right: 10px;
+        }
+  
+        .buy-credits-btn {
+          padding: 8px 15px;
+          background-color: $purple-500; // Main button color
+          border: none;
+          color: white;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.3s;
+  
+          &:hover {
+            background-color: $purple-400; // Lighter shade on hover
+          }
+        }
+      }
+    }
+  
+    .trade-content {
+      display: flex;
+      gap: 5px;
+  
+      .trade-section {
+        flex: 1;
+  
+        .section-header {
+          margin-bottom: 10px;
+  
+          h2 {
+            font-size: 1.5rem;
+          }
+        }
+  
+        .filter-buttons {
+          display: flex;
+          padding: 6px 6px;
+          gap: 10px;
+          margin-bottom: 20px;
+  
+          button {
+            padding: 10px 20px;
+            background-color: $purple-700; // Filter button background
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+  
+            &.active {
+              background-color: $purple-500; // Active filter button color
+            }
+  
+            &:hover {
+              background-color: $purple-600; // Darker shade on hover
+            }
+          }
+        }
+  
+        .items-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 10px;
+  
+          .trade-item {
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+  
+            // Apply colors based on rarity
+            &.rare {
+              background-color: $purple-400; // Lighter purple for Rare items
+            }
+  
+            &.epic {
+              background-color: $purple-300; // Lighter purple for Epic items
+            }
+  
+            &.legendary {
+              background-color: $purple-500; // Main purple for Legendary items
+            }
+  
+            // Apply specific colors for categories
+            &.character {
+              background-color: $character-color; // Character category color
+            }
+  
+            &.accessory {
+              background-color: $accessory-color; // Accessory category color
+            }
+  
+            &.animation {
+              background-color: $animation-color; // Animation category color
+            }
+  
+            &.background {
+              background-color: $background-color; // Background category color
+            }
+  
+            &.effect {
+              background-color: $effect-color; // Effect category color
+            }
+            &:hover {
+                transform: scale(1.02); // Slightly enlarge the item on hover
+              }
+            .item-content {
+              h3 {
+                font-size: 1.2rem;
+                margin-bottom: 5px;
+              }
+  
+              .item-category,
+              .item-rarity {
+                font-size: 1rem;
+                margin-bottom: 5px;
+              }
+  
+              .item-value {
+                font-size: 1.2rem;
+                font-weight: bold;
+              }
+            }
+          }
+        }
+      }
+  
+      .trade-form {
+        flex: 1;
+  
+        h2 {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+  
+        .selected-item-info {
+          margin-bottom: 20px;
+  
+          h3 {
+            font-size: 1.3rem;
+          }
+  
+          .item-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            margin-top: 10px;
+  
+            .category,
+            .rarity {
+              font-weight: bold;
+            }
+          }
+  
+          .suggested-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: $purple-500; // Suggested value color
+          }
+        }
+  
+        .offer-input {
+          margin-bottom: 20px;
+  
+          label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+          }
+  
+          input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid $purple-600; // Border color
+            border-radius: 5px;
+            background-color: $purple-700; // Input background color
+            color: white;
+          }
+        }
+  
+        .confirm-button {
+          width: 100%;
+          padding: 10px;
+          background-color: $purple-500; // Main button color
+          border: none;
+          color: white;
+          font-size: 1.2rem;
+          cursor: pointer;
+          transition: background-color 0.3s;
+  
+          &:hover {
+            background-color: $purple-400; // Button hover color
+          }
+  
+          &:disabled {
+            background-color: $purple-800; // Disabled button color
+            cursor: not-allowed;
+          }
+        }
+  
+        .select-prompt {
+          font-size: 1.2rem;
+          text-align: center;
+          color: $purple-300; // Prompt color
+        }
+      }
+    }
+}
