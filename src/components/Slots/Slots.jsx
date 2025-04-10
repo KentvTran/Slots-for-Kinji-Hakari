@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useRef, useState } from "react"
 import Phaser from "phaser"
 import "./Slots.scss"
@@ -71,6 +69,7 @@ const Slots = () => {
     let resultText
     let balanceText
     let betText
+    let betInput
     let balance = GAME_SETTINGS.initialBalance
     let currentBet = GAME_SETTINGS.initialBet
     let winAmount = 0
@@ -91,6 +90,9 @@ const Slots = () => {
       width: GAME_CONFIG.width,
       height: GAME_CONFIG.height,
       backgroundColor: GAME_CONFIG.backgroundColor,
+      dom: {
+        createContainer: true,
+      },
       scene: {
         preload: preload,
         create: create,
@@ -295,26 +297,62 @@ const Slots = () => {
         })
         .setOrigin(0.5)
 
-      betText = this.add
-        .text(GAME_CONFIG.width / 2, 520, `Bet: $${currentBet}`, {
-          fontSize: "20px",
-          fill: "#ffffff",
-          fontFamily: "Arial",
-          stroke: "#000000",
-          strokeThickness: 2,
-        })
-        .setOrigin(0.5)
+      // Create bet input field
+      const inputElement = document.createElement("input")
+      inputElement.type = "number"
+      inputElement.value = currentBet
+      inputElement.min = GAME_SETTINGS.minBet
+      inputElement.max = balance
+      inputElement.style.width = "60px"
+      inputElement.style.height = "30px"
+      inputElement.style.textAlign = "center"
+      inputElement.style.fontSize = "18px"
+      inputElement.style.fontFamily = "Arial"
+      inputElement.style.borderRadius = "5px"
+      inputElement.style.border = "2px solid #ffd700"
+      inputElement.style.backgroundColor = "#6a0dad"
+      inputElement.style.color = "#ffffff"
+      inputElement.style.fontWeight = "bold"
+      inputElement.style.marginLeft = "5px"
 
-      resultText = this.add
-        .text(GAME_CONFIG.width / 2, 150, "", {
-          fontSize: "32px",
-          fill: "#ffd700",
-          fontFamily: "Arial",
-          fontWeight: "bold",
-          stroke: "#000000",
-          strokeThickness: 4,
-        })
-        .setOrigin(0.5)
+      // Create a container for the bet label and input
+      const betContainer = document.createElement("div")
+      betContainer.style.display = "flex"
+      betContainer.style.alignItems = "center"
+      betContainer.style.justifyContent = "center"
+
+      // Add a label before the input
+      const betLabel = document.createElement("span")
+      betLabel.textContent = "Bet: $"
+      betLabel.style.color = "#ffffff"
+      betLabel.style.fontSize = "20px"
+      betLabel.style.fontFamily = "Arial"
+      betLabel.style.fontWeight = "bold"
+      betLabel.style.textShadow = "2px 2px 2px #000000"
+
+      betContainer.appendChild(betLabel)
+      betContainer.appendChild(inputElement)
+
+      // Add the container to the DOM
+      betInput = this.add.dom(GAME_CONFIG.width / 2, 500, betContainer)
+
+      // Add event listener for input changes
+      inputElement.addEventListener("change", (e) => {
+        if (isSpinning) return
+
+        let newBet = Number.parseInt(e.target.value)
+
+        // Validate the bet amount
+        if (isNaN(newBet) || newBet < GAME_SETTINGS.minBet) {
+          newBet = GAME_SETTINGS.minBet
+        } else if (newBet > balance) {
+          newBet = balance
+        }
+
+        // Update the bet amount
+        currentBet = newBet
+        e.target.value = currentBet
+      })
     }
 
     // Create the symbol legend
@@ -401,6 +439,12 @@ const Slots = () => {
         betUpButton.disableInteractive()
         betDownButton.disableInteractive()
 
+        // Disable input field during spin
+        const inputElement = document.querySelector('input[type="number"]')
+        if (inputElement) {
+          inputElement.disabled = true
+        }
+
         // Spin each reel with delay
         reels.forEach((reel, i) => {
           // Start spinning animation with a delay
@@ -423,6 +467,13 @@ const Slots = () => {
       leverHandle.setInteractive()
       betUpButton.setInteractive()
       betDownButton.setInteractive()
+
+      // Re-enable input field
+      const inputElement = document.querySelector('input[type="number"]')
+      if (inputElement) {
+        inputElement.disabled = false
+        inputElement.max = balance // Update max value to current balance
+      }
     }
 
     // Simplified spinning function
@@ -557,7 +608,11 @@ const Slots = () => {
       if (currentBet > balance) currentBet = balance
       if (currentBet <= 0) currentBet = GAME_SETTINGS.minBet
 
-      betText.setText(`Bet: $${currentBet}`)
+      // Update the input field
+      const inputElement = document.querySelector('input[type="number"]')
+      if (inputElement) {
+        inputElement.value = currentBet
+      }
     }
 
     function decreaseBet() {
@@ -566,7 +621,11 @@ const Slots = () => {
       currentBet -= GAME_SETTINGS.betIncrement
       if (currentBet < GAME_SETTINGS.minBet) currentBet = GAME_SETTINGS.minBet
 
-      betText.setText(`Bet: $${currentBet}`)
+      // Update the input field
+      const inputElement = document.querySelector('input[type="number"]')
+      if (inputElement) {
+        inputElement.value = currentBet
+      }
     }
 
     function update() {
@@ -595,4 +654,3 @@ const Slots = () => {
 }
 
 export default Slots
-
