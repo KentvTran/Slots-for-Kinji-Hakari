@@ -64,18 +64,18 @@ const Slots = () => {
     }
 
     // Game variables
-    let isSpinning = false
-    const reels = []
-    let resultText
-    let balanceText
-    let betText
-    let betInput
-    let balance = GAME_SETTINGS.initialBalance
-    let currentBet = GAME_SETTINGS.initialBet
-    let winAmount = 0
-    let leverHandle
-    let betUpButton
-    let betDownButton
+let isSpinning = false
+const reels = []
+let resultText = null // Add this
+let balanceText = null
+let betText = null
+let betInput = null
+let balance = GAME_SETTINGS.initialBalance
+let currentBet = GAME_SETTINGS.initialBet
+let winAmount = 0
+let leverHandle = null
+let betUpButton = null
+let betDownButton = null
 
     // Clear any existing game instance
     if (gameRef.current) {
@@ -289,6 +289,18 @@ const Slots = () => {
       balanceText = this.add
         .text(GAME_CONFIG.width / 2, 380, `Balance: $${balance}`, {
           fontSize: "24px",
+          fill: "#ffffff",
+          fontFamily: "Arial",
+          fontWeight: "bold",
+          stroke: "#000000",
+          strokeThickness: 3,
+        })
+        .setOrigin(0.5)
+    
+      // Add this initialization for resultText
+      resultText = this.add
+        .text(GAME_CONFIG.width / 2, 340, "", {
+          fontSize: "28px",
           fill: "#ffffff",
           fontFamily: "Arial",
           fontWeight: "bold",
