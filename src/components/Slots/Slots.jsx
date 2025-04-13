@@ -1,10 +1,58 @@
 import { useEffect, useRef, useState } from "react"
+import { auth, db } from "../../firebase/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"
 import Phaser from "phaser"
 import "./Slots.scss"
 
 const Slots = () => {
   const gameRef = useRef(null)
   const [gameStatus, setGameStatus] = useState("Loading...")
+  const [user, setUser] = useState(null)
+  const [balance, setBalance] = useState(1000)
+  const balanceRef = useRef(balance)
+
+  // Sync balance with ref
+  useEffect(() => {
+    balanceRef.current = balance
+  }, [balance])
+
+  // Auth state listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user)
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid))
+          if (userDoc.exists()) {
+            setBalance(userDoc.data().credits)
+          } else {
+            await setDoc(doc(db, "users", user.uid), {
+              credits: 1000,
+              createdAt: new Date(),
+            })
+            setBalance(1000)
+          }
+        } catch (error) {
+          console.error("Error loading user data:", error)
+        }
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  // Update credits in Firestore
+  const updateCredits = async (newBalance) => {
+    try {
+      if (user) {
+        await updateDoc(doc(db, "users", user.uid), {
+          credits: newBalance,
+        })
+      }
+    } catch (error) {
+      console.error("Error updating credits:", error)
+    }
+  }
 
   useEffect(() => {
     // Game constants
@@ -56,7 +104,7 @@ const Slots = () => {
     }
 
     const GAME_SETTINGS = {
-      initialBalance: 1000,
+      initialBalance: balanceRef.current,
       initialBet: 50,
       minBet: 10,
       betIncrement: 10,
@@ -64,18 +112,22 @@ const Slots = () => {
     }
 
     // Game variables
-let isSpinning = false
-const reels = []
-let resultText = null // Add this
-let balanceText = null
-let betText = null
-let betInput = null
-let balance = GAME_SETTINGS.initialBalance
-let currentBet = GAME_SETTINGS.initialBet
-let winAmount = 0
-let leverHandle = null
-let betUpButton = null
-let betDownButton = null
+    let isSpinning = false
+    const reels = []
+    let resultText = null
+    let balanceText = null
+    const betText = null
+    let betInput = null
+    let currentBet = GAME_SETTINGS.initialBet
+    let winAmount = 0
+    let leverHandle = null
+    let betUpButton = null
+    let betDownButton = null
+
+    // Function to get a random symbol
+    function getRandomSymbol() {
+      return SYMBOLS.names[Math.floor(Math.random() * SYMBOLS.names.length)]
+    }
 
     // Clear any existing game instance
     if (gameRef.current) {
@@ -287,7 +339,7 @@ let betDownButton = null
     // Create text displays for balance, bet, and results
     function createTextDisplays() {
       balanceText = this.add
-        .text(GAME_CONFIG.width / 2, 380, `Balance: $${balance}`, {
+        .text(GAME_CONFIG.width / 2, 380, `Balance: $${balanceRef.current}`, {
           fontSize: "24px",
           fill: "#ffffff",
           fontFamily: "Arial",
@@ -296,8 +348,7 @@ let betDownButton = null
           strokeThickness: 3,
         })
         .setOrigin(0.5)
-    
-      // Add this initialization for resultText
+
       resultText = this.add
         .text(GAME_CONFIG.width / 2, 340, "", {
           fontSize: "28px",
@@ -314,7 +365,7 @@ let betDownButton = null
       inputElement.type = "number"
       inputElement.value = currentBet
       inputElement.min = GAME_SETTINGS.minBet
-      inputElement.max = balance
+      inputElement.max = balanceRef.current
       inputElement.style.width = "60px"
       inputElement.style.height = "30px"
       inputElement.style.textAlign = "center"
@@ -357,44 +408,54 @@ let betDownButton = null
         // Validate the bet amount
         if (isNaN(newBet) || newBet < GAME_SETTINGS.minBet) {
           newBet = GAME_SETTINGS.minBet
-        } else if (newBet > balance) {
-          newBet = balance
+        } else if (newBet > balanceRef.current) {
+          newBet = balanceRef.current
         }
 
         // Update the bet amount
         currentBet = newBet
         e.target.value = currentBet
       })
-    }
 
-    // Create the symbol legend
-    function createSymbolLegend() {
-      this.add.text(650, 380, "SYMBOLS:", {
-        fontSize: "16px",
-        fill: "#ffffff",
-        fontFamily: "Arial",
-        fontWeight: "bold",
+      // Add input event to update bet in real-time as user types
+      inputElement.addEventListener("input", (e) => {
+        if (isSpinning) return
+
+        const newBet = Number.parseInt(e.target.value)
+
+        // Only update if it's a valid number
+        if (!isNaN(newBet)) {
+          // We don't enforce min/max here to allow typing in progress
+          // The final validation happens on change or before spin
+          currentBet = newBet
+        }
       })
-
-      let legendY = 410
-      for (const symbol of SYMBOLS.names) {
-        this.add.text(650, legendY, `${SYMBOLS.labels[symbol]}: x${SYMBOLS.prizes[symbol]}`, {
-          fontSize: "14px",
-          fill: "#ffffff",
-          fontFamily: "Arial",
-        })
-        legendY += 20
-      }
     }
 
-    // Helper function to get a random symbol
-    function getRandomSymbol() {
-      return SYMBOLS.names[Math.floor(Math.random() * SYMBOLS.names.length)]
+    function createSymbolLegend() {
+      // Placeholder for symbol legend creation
     }
 
     function pullLever() {
       try {
         if (isSpinning) return
+
+        // Get the current value from the input field and validate it before spinning
+        const inputElement = document.querySelector('input[type="number"]')
+        if (inputElement) {
+          let newBet = Number.parseInt(inputElement.value)
+
+          // Validate the bet amount
+          if (isNaN(newBet) || newBet < GAME_SETTINGS.minBet) {
+            newBet = GAME_SETTINGS.minBet
+          } else if (newBet > balanceRef.current) {
+            newBet = balanceRef.current
+          }
+
+          // Update the bet amount and input field
+          currentBet = newBet
+          inputElement.value = currentBet
+        }
 
         // Animate lever pull
         this.tweens.add({
@@ -430,7 +491,7 @@ let betDownButton = null
         }
 
         // Check if player has enough balance
-        if (balance < currentBet) {
+        if (balanceRef.current < currentBet) {
           resultText.setText("Not enough funds!")
           resultText.setFill("#ff0000")
           setTimeout(() => {
@@ -440,8 +501,10 @@ let betDownButton = null
         }
 
         // Deduct bet from balance
-        balance -= currentBet
-        balanceText.setText(`Balance: $${balance}`)
+        const newBalance = balanceRef.current - currentBet
+        setBalance(newBalance)
+        updateCredits(newBalance)
+        balanceText.setText(`Balance: $${newBalance}`)
 
         isSpinning = true
         resultText.setText("")
@@ -484,7 +547,7 @@ let betDownButton = null
       const inputElement = document.querySelector('input[type="number"]')
       if (inputElement) {
         inputElement.disabled = false
-        inputElement.max = balance // Update max value to current balance
+        inputElement.max = balanceRef.current
       }
     }
 
@@ -583,10 +646,11 @@ let betDownButton = null
         if (allMatch) {
           // Player wins!
           winAmount = currentBet * SYMBOLS.prizes[firstSymbol]
-          balance += winAmount
+          const newBalance = balanceRef.current + winAmount
+          setBalance(newBalance)
+          updateCredits(newBalance)
+          balanceText.setText(`Balance: $${newBalance}`)
 
-          // Update UI
-          balanceText.setText(`Balance: $${balance}`)
           resultText.setText(`YOU WIN $${winAmount}!`)
           resultText.setFill("#ffd700")
 
@@ -617,7 +681,7 @@ let betDownButton = null
       if (isSpinning) return
 
       currentBet += GAME_SETTINGS.betIncrement
-      if (currentBet > balance) currentBet = balance
+      if (currentBet > balanceRef.current) currentBet = balanceRef.current
       if (currentBet <= 0) currentBet = GAME_SETTINGS.minBet
 
       // Update the input field
@@ -653,13 +717,22 @@ let betDownButton = null
     }
   }, [])
 
+  // Update the JSX structure to ensure the gradient background is applied correctly
   return (
     <div className="slots-container">
-      <div id="slots-container" className="slots-game"></div>
-      {gameStatus !== "Game ready" && (
-        <div className="game-status">
-          <p>{gameStatus}</p>
+      {!user ? (
+        <div className="auth-message">
+          <p>Please sign in to play!</p>
         </div>
+      ) : (
+        <>
+          <div id="slots-container" className="slots-game"></div>
+          {gameStatus !== "Game ready" && (
+            <div className="game-status">
+              <p>{gameStatus}</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
