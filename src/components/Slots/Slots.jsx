@@ -144,7 +144,6 @@ const Slots = () => {
     }
   }, [user]) // Only depend on user, not balance
 
-  // Update the JSX structure to ensure the gradient background is applied correctly
   return (
     <div className="slots-container">
       {!user ? (
