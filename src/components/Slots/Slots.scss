@@ -4,10 +4,13 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(to bottom, #f3e8ff, #e9d5ff); /* purple-100 to purple-200 equivalent */
+  width: 100%;
+  background: linear-gradient(to right, #f3e8ff, #e9d5ff); /* Changed to horizontal gradient */
   color: #581c87; /* purple-900 equivalent */
   padding: 1.5rem;
   font-family: 'Arial', sans-serif;
+  position: relative; /* Add position relative */
+  overflow: hidden; /* Prevent any overflow */
 }
 
 .slots-game {
@@ -15,6 +18,7 @@
   border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(88, 28, 135, 0.3);
+  z-index: 1; /* Ensure game is above background */
 }
 
 /* Add a circular frame around the game */
@@ -59,4 +63,30 @@
 /* Style for the canvas to make it rounded */
 canvas {
   border-radius: 30px;
+}
+
+.auth-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  
+  p {
+    background: rgba(106, 13, 173, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    border: 2px solid #ffd700;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #f3e8ff, #e9d5ff);
+  min-height: 100vh;
+  width: 100%;
 }
