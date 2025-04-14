@@ -1,10 +1,11 @@
+
 import { useEffect, useRef, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore"
 import { auth, db } from "../../firebase/firebase"
 import { initializeGame } from "./phaserLogic"
 import { updateCredits } from "./firebaseLogic"
-import { AuthMessage, GameStatus } from "./uiComponents"
+import { GameStatus } from "./uiComponents"
 import "./Slots.scss"
 
 // Game constants
@@ -66,6 +67,7 @@ const Slots = () => {
   const gameRef = useRef(null)
   const [gameStatus, setGameStatus] = useState("Loading...")
   const [user, setUser] = useState(null)
+  const userRef = useRef(null) 
   const [balance, setBalance] = useState(1000)
   const balanceRef = useRef(balance)
   const gameInitializedRef = useRef(false)
@@ -84,6 +86,8 @@ const Slots = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user)
+      userRef.current = user 
+
       if (user) {
         try {
           const userDocRef = doc(db, "users", user.uid)
@@ -107,8 +111,8 @@ const Slots = () => {
 
   // Initialize the game only once
   useEffect(() => {
-    // Don't initialize if already done or if no user
-    if (gameInitializedRef.current || !user) {
+    // Don't initialize if already done
+    if (gameInitializedRef.current) {
       return
     }
 
@@ -118,8 +122,9 @@ const Slots = () => {
         balance,
         setBalance,
         balanceRef,
-        updateCredits: (newBalance) => updateCredits(newBalance, user),
+        updateCredits: (newBalance) => updateCredits(newBalance, userRef.current),
         setGameStatus,
+        userRef, // Pass userRef instead of user
       })
       gameInitializedRef.current = true
       console.log("Phaser Game created:", gameRef.current)
@@ -142,18 +147,12 @@ const Slots = () => {
         gameRef.current = null
       }
     }
-  }, [user]) // Only depend on user, not balance
+  }, []) // No dependencies, initialize once
 
   return (
     <div className="slots-container">
-      {!user ? (
-        <AuthMessage />
-      ) : (
-        <>
-          <div id="slots-container" className="slots-game"></div>
-          {gameStatus !== "Game ready" && <GameStatus status={gameStatus} />}
-        </>
-      )}
+      <div id="slots-container" className="slots-game"></div>
+      {gameStatus !== "Game ready" && <GameStatus status={gameStatus} />}
     </div>
   )
 }
