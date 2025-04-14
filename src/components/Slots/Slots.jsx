@@ -1,69 +1,80 @@
-import { useEffect, useRef, useState } from "react";
-import { auth, db } from "../../firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import Phaser from "phaser";
-import "./Slots.scss";
+import { useEffect, useRef, useState } from "react"
+import { auth, db } from "../../firebase/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore"
+import Phaser from "phaser"
+import "./Slots.scss"
 
 const Slots = () => {
-  const gameRef = useRef(null);
-  const [gameStatus, setGameStatus] = useState("Loading...");
-  const [user, setUser] = useState(null);
-  const [balance, setBalance] = useState(1000);
-  const balanceRef = useRef(balance);
+  const gameRef = useRef(null)
+  const [gameStatus, setGameStatus] = useState("Loading...")
+  const [user, setUser] = useState(null)
+  const [balance, setBalance] = useState(1000)
+  const balanceRef = useRef(balance)
+  const gameInitializedRef = useRef(false)
 
   // Sync balance with ref
   useEffect(() => {
-    balanceRef.current = balance;
-  }, [balance]);
+    balanceRef.current = balance
+
+    // Update the balance display in the game if it exists
+    if (gameRef.current && gameRef.current.balanceText) {
+      gameRef.current.balanceText.setText(`Balance: ${balance}`)
+    }
+  }, [balance])
 
   // Auth state listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+      setUser(user)
       if (user) {
         try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDoc = await getDoc(userDocRef);
+          const userDocRef = doc(db, "users", user.uid)
+          const userDoc = await getDoc(userDocRef)
           if (userDoc.exists()) {
-            setBalance(Number(userDoc.data().credits));
+            setBalance(Number(userDoc.data().credits))
           } else {
             await setDoc(userDocRef, {
               credits: 1000,
               createdAt: serverTimestamp(),
-            });
-            setBalance(1000);
+            })
+            setBalance(1000)
           }
         } catch (error) {
-          console.error("Error loading user data:", error);
+          console.error("Error loading user data:", error)
         }
       }
-    });
-    return () => unsubscribe();
-  }, []);
+    })
+    return () => unsubscribe()
+  }, [])
 
   // Update credits in Firestore
   const updateCredits = async (newBalance) => {
     try {
       if (user) {
-        console.log("Updating credits for", user.uid, "to", newBalance);
+        console.log("Updating credits for", user.uid, "to", newBalance)
         await updateDoc(doc(db, "users", user.uid), {
           credits: newBalance,
-        });
+        })
       }
     } catch (error) {
-      console.error("Error updating credits:", error);
+      console.error("Error updating credits:", error)
     }
-  };
-  
+  }
 
+  // Initialize the game only once
   useEffect(() => {
+    // Don't initialize if already done or if no user
+    if (gameInitializedRef.current || !user) {
+      return
+    }
+
     // Game constants, configurations, and variables are as before.
     const GAME_CONFIG = {
       width: 800,
       height: 600,
       backgroundColor: "#ff69b4",
-    };
+    }
 
     const REEL_CONFIG = {
       count: 3,
@@ -73,7 +84,7 @@ const Slots = () => {
       startX: -150,
       symbolWidth: 110,
       symbolHeight: 60,
-    };
+    }
 
     const COLORS = {
       machineBody: 0x6a0dad,
@@ -86,7 +97,7 @@ const Slots = () => {
       leverStroke: 0xffd700,
       betButton: 0x6a0dad,
       betButtonStroke: 0xffd700,
-    };
+    }
 
     const SYMBOLS = {
       names: ["chaewon", "gojo", "nanami", "winter", "todo"],
@@ -104,37 +115,37 @@ const Slots = () => {
         winter: 20,
         todo: 10,
       },
-    };
+    }
 
     const GAME_SETTINGS = {
-      initialBalance: balanceRef.current,
+      initialBalance: balance,
       initialBet: 50,
       minBet: 10,
       betIncrement: 10,
       winChance: 0.3,
-    };
+    }
 
     // Game variables
-    let isSpinning = false;
-    const reels = [];
-    let resultText = null;
-    let balanceText = null;
-    let betInput = null;
-    let currentBet = GAME_SETTINGS.initialBet;
-    let winAmount = 0;
-    let leverHandle = null;
-    let betUpButton = null;
-    let betDownButton = null;
+    let isSpinning = false
+    const reels = []
+    let resultText = null
+    let balanceText = null
+    let betInput = null
+    let currentBet = GAME_SETTINGS.initialBet
+    let winAmount = 0
+    let leverHandle = null
+    let betUpButton = null
+    let betDownButton = null
 
     // Function to get a random symbol
     function getRandomSymbol() {
-      return SYMBOLS.names[Math.floor(Math.random() * SYMBOLS.names.length)];
+      return SYMBOLS.names[Math.floor(Math.random() * SYMBOLS.names.length)]
     }
 
     // Clear any existing game instance
     if (gameRef.current) {
-      gameRef.current.destroy(true);
-      gameRef.current = null;
+      gameRef.current.destroy(true)
+      gameRef.current = null
     }
 
     // Create a new game configuration
@@ -152,65 +163,64 @@ const Slots = () => {
         create: create,
         update: update,
       },
-    };
+    }
 
     try {
-      console.log("Initializing Phaser Game...");
-      gameRef.current = new Phaser.Game(config);
-      console.log("Phaser Game created:", gameRef.current);
-      setGameStatus("Game loaded");
-    
+      console.log("Initializing Phaser Game...")
+      gameRef.current = new Phaser.Game(config)
+      gameInitializedRef.current = true
+      console.log("Phaser Game created:", gameRef.current)
+      setGameStatus("Game loaded")
+
       window.addEventListener("error", (e) => {
-        console.error("Game error:", e);
-        setGameStatus("Error: " + e.message);
-      });
+        console.error("Game error:", e)
+        setGameStatus("Error: " + e.message)
+      })
     } catch (error) {
-      console.error("Failed to initialize game:", error);
-      setGameStatus("Failed to initialize: " + error.message);
+      console.error("Failed to initialize game:", error)
+      setGameStatus("Failed to initialize: " + error.message)
     }
-    
 
     function preload() {
       try {
-        console.log("Preloading assets...");
+        console.log("Preloading assets...")
         SYMBOLS.names.forEach((symbol) => {
-          console.log(`Loading asset: ${symbol}`);
-          this.load.image(symbol, `/src/assets/${symbol}.png`);
-        });
-    
+          console.log(`Loading asset: ${symbol}`)
+          this.load.image(symbol, `/src/assets/${symbol}.png`)
+        })
+
         this.load.on("loaderror", (fileObj) => {
-          console.error("Error loading asset:", fileObj.src);
-          setGameStatus(`Error loading: ${fileObj.key}`);
-        });
-    
+          console.error("Error loading asset:", fileObj.src)
+          setGameStatus(`Error loading: ${fileObj.key}`)
+        })
+
         this.load.on("complete", () => {
-          console.log("All assets loaded successfully.");
-        });
-    
-        setGameStatus("Assets loaded");
+          console.log("All assets loaded successfully.")
+        })
+
+        setGameStatus("Assets loaded")
       } catch (error) {
-        console.error("Error in preload:", error);
-        setGameStatus("Preload error: " + error.message);
+        console.error("Error in preload:", error)
+        setGameStatus("Preload error: " + error.message)
       }
-    }    
+    }
 
     function create() {
       try {
-        console.log("Creating game scene...");
-        createMachineBody.call(this);
-        createReels.call(this);
-        createLever.call(this);
-        createBetControls.call(this);
-        createTextDisplays.call(this);
-        createSymbolLegend.call(this);
-    
-        setGameStatus("Game ready");
+        console.log("Creating game scene...")
+        createMachineBody.call(this)
+        createReels.call(this)
+        createLever.call(this)
+        createBetControls.call(this)
+        createTextDisplays.call(this)
+        createSymbolLegend.call(this)
+
+        setGameStatus("Game ready")
       } catch (error) {
-        console.error("Error in create():", error);
-        setGameStatus("Create error: " + error.message);
+        console.error("Error in create():", error)
+        setGameStatus("Create error: " + error.message)
       }
     }
-    
 
     // Create the main machine body and window
     function createMachineBody() {
@@ -239,14 +249,14 @@ const Slots = () => {
 
     // Create the reels and symbols
     function createReels() {
-      console.log("Creating reels...");
-      const maskGraphics = this.make.graphics();
-      maskGraphics.fillStyle(0xffffff);
-      maskGraphics.fillRect(175, 160, 450, 180);
-      const reelMask = maskGraphics.createGeometryMask();
-    
-      const reelContainer = this.add.container(GAME_CONFIG.width / 2, 250);
-      reelContainer.setMask(reelMask);    
+      console.log("Creating reels...")
+      const maskGraphics = this.make.graphics()
+      maskGraphics.fillStyle(0xffffff)
+      maskGraphics.fillRect(175, 160, 450, 180)
+      const reelMask = maskGraphics.createGeometryMask()
+
+      const reelContainer = this.add.container(GAME_CONFIG.width / 2, 250)
+      reelContainer.setMask(reelMask)
 
       // Create each reel
       for (let i = 0; i < REEL_CONFIG.count; i++) {
@@ -347,7 +357,7 @@ const Slots = () => {
     // Create text displays for balance, bet, and results
     function createTextDisplays() {
       balanceText = this.add
-        .text(GAME_CONFIG.width / 2, 380, `Balance: $${balanceRef.current}`, {
+        .text(GAME_CONFIG.width / 2, 380, `Balance: ${balance}`, {
           fontSize: "24px",
           fill: "#ffffff",
           fontFamily: "Arial",
@@ -356,6 +366,11 @@ const Slots = () => {
           strokeThickness: 3,
         })
         .setOrigin(0.5)
+
+      // Store the balanceText in the game ref so we can update it from outside
+      if (gameRef.current) {
+        gameRef.current.balanceText = balanceText
+      }
 
       resultText = this.add
         .text(GAME_CONFIG.width / 2, 340, "", {
@@ -373,7 +388,7 @@ const Slots = () => {
       inputElement.type = "number"
       inputElement.value = currentBet
       inputElement.min = GAME_SETTINGS.minBet
-      inputElement.max = balanceRef.current
+      inputElement.max = balance
       inputElement.style.width = "60px"
       inputElement.style.height = "30px"
       inputElement.style.textAlign = "center"
@@ -512,7 +527,7 @@ const Slots = () => {
         const newBalance = balanceRef.current - currentBet
         setBalance(newBalance)
         updateCredits(newBalance)
-        balanceText.setText(`Balance: $${newBalance}`)
+        balanceText.setText(`Balance: ${newBalance}`)
 
         isSpinning = true
         resultText.setText("")
@@ -657,9 +672,9 @@ const Slots = () => {
           const newBalance = balanceRef.current + winAmount
           setBalance(newBalance)
           updateCredits(newBalance)
-          balanceText.setText(`Balance: $${newBalance}`)
+          balanceText.setText(`Balance: ${newBalance}`)
 
-          resultText.setText(`YOU WIN $${winAmount}!`)
+          resultText.setText(`YOU WIN ${winAmount}!`)
           resultText.setFill("#ffd700")
 
           // Animate winning symbols
@@ -718,12 +733,13 @@ const Slots = () => {
 
     // Clean up on unmount
     return () => {
+      gameInitializedRef.current = false
       if (gameRef.current) {
-        gameRef.current.destroy(true);
-        gameRef.current = null;
+        gameRef.current.destroy(true)
+        gameRef.current = null
       }
-    };
-  }, []);
+    }
+  }, [user]) // Only depend on user, not balance
 
   // Update the JSX structure to ensure the gradient background is applied correctly
   return (
@@ -743,7 +759,7 @@ const Slots = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Slots;
+export default Slots
