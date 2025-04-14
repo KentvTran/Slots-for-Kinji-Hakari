@@ -20,9 +20,12 @@ export const doSignout = () => {
 };
 
 export const doPasswordReset = (email) => {
-    return sendPasswordResetEmail(auth, email);
-};
-
+    return sendPasswordResetEmail(auth, email, {
+      url: "http://localhost:5173/reset-password",
+      handleCodeInApp: true,
+    });
+  };
+  
 export const doPasswordChange = (password) => {
     return updatePassword(auth.currentUser, password);
 };
