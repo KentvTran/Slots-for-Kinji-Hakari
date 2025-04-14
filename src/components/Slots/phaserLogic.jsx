@@ -2,7 +2,7 @@ import Phaser from "phaser"
 import { getRandomSymbol, updateSymbol, calculateWinnings, validateBet } from "./GameLogic"
 import { GAME_CONFIG, REEL_CONFIG, COLORS, SYMBOLS, GAME_SETTINGS } from "./Slots"
 
-export function initializeGame({ balance, setBalance, balanceRef, updateCredits, setGameStatus }) {
+export function initializeGame({ balance, setBalance, balanceRef, updateCredits, setGameStatus, userRef }) {
   // Game variables
   let isSpinning = false
   const reels = []
@@ -349,6 +349,14 @@ export function initializeGame({ balance, setBalance, balanceRef, updateCredits,
 
       if (isSpinning) {
         console.log("Already spinning, ignoring click")
+        return
+      }
+
+      // Check if user is authenticated using the userRef
+      console.log("User authentication check:", userRef.current)
+      if (!userRef.current) {
+        resultText.setText("Please sign in to play!")
+        resultText.setFill("#ff0000")
         return
       }
 
