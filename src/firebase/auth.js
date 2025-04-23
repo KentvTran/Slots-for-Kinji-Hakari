@@ -3,7 +3,7 @@ import {
     sendEmailVerification, 
     sendPasswordResetEmail, 
     updatePassword, 
-    signInWithEmailAndPassword // ✅ Fix: Import missing function
+    signInWithEmailAndPassword 
 } from "firebase/auth";
 import { auth } from "./firebase";
 
@@ -25,7 +25,8 @@ export const doPasswordReset = (email) => {
       handleCodeInApp: true,
     });
   };
-  
+//   youre gonna have to remove the hard coded url maybe later on
+
 export const doPasswordChange = (password) => {
     return updatePassword(auth.currentUser, password);
 };
