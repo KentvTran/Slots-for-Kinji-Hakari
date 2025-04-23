@@ -70,6 +70,29 @@ $effect-color: $purple-700;
   }
 }
 
+// Purchase Status Message
+.purchase-status {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  font-weight: bold;
+  text-align: center;
+  
+  &.success {
+    background-color: rgba(144, 238, 144, 0.9);
+    color: darkgreen;
+  }
+  
+  &.error {
+    background-color: rgba(255, 99, 71, 0.9);
+    color: white;
+  }
+}
+
 // Shop Content
 .shop-content {
   display: grid;
@@ -168,6 +191,7 @@ $effect-color: $purple-700;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
     cursor: pointer;
+    position: relative;
     
     &:hover {
       transform: scale(1.02);
@@ -196,6 +220,8 @@ $effect-color: $purple-700;
     .item-details {
       padding: 1.5rem;
       color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      height: 100%;
       
       h3 {
         font-size: 1.25rem;
@@ -212,6 +238,31 @@ $effect-color: $purple-700;
       .item-price {
         font-weight: bold;
         font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .purchase-btn, .owned-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-top: 0.5rem;
+        
+        &:hover:not(:disabled) {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+      
+      .owned-btn {
+        background-color: rgba(144, 238, 144, 0.3);
       }
     }
   }
@@ -234,6 +285,7 @@ $effect-color: $purple-700;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
     cursor: pointer;
+    position: relative;
     
     &:hover {
       transform: scale(1.02);
@@ -262,6 +314,8 @@ $effect-color: $purple-700;
     .item-details {
       padding: 1rem;
       color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      height: 100%;
       
       h3 {
         font-size: 1rem;
@@ -277,6 +331,31 @@ $effect-color: $purple-700;
       
       .item-price {
         font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+      
+      .purchase-btn, .owned-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        
+        &:hover:not(:disabled) {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+      
+      .owned-btn {
+        background-color: rgba(144, 238, 144, 0.3);
       }
     }
   }
@@ -296,4 +375,3 @@ $effect-color: $purple-700;
     }
   }
 }
-

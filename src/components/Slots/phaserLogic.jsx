@@ -39,7 +39,7 @@ export function initializeGame({ balance, setBalance, balanceRef, updateCredits,
       console.log("Preloading assets...")
       SYMBOLS.names.forEach((symbol) => {
         console.log(`Loading asset: ${symbol}`)
-        this.load.image(symbol, `/src/assets/${symbol}.png`)
+        this.load.image(symbol, `/src/assets/slots/${symbol}.png`)
       })
 
       this.load.on("loaderror", (fileObj) => {
