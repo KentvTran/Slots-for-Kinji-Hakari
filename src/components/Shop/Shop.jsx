@@ -122,7 +122,9 @@ const Shop = () => {
   }
 
   const allItemIds = [
-    ...shopItems.featured.filter((item) => !item.isBattlePass).map((item) => item.id),
+    ...shopItems.featured
+      .filter((item) => !item.isBattlePass && item.id !== "chaewon_coin") // Add chaewon_coin exclusion
+      .map((item) => item.id),
     ...shopItems.daily.map((item) => item.id),
   ]
 
@@ -207,6 +209,7 @@ const Shop = () => {
       const userRef = doc(db, "users", userId)
       if (isBattlePass) {
         const newItems = allItemIds.filter((id) => !userItems.includes(id))
+        .filter(id => id !== "chaewon_coin")
         await updateDoc(userRef, {
           credits: creditAmount - price,
           items: arrayUnion(...newItems),
