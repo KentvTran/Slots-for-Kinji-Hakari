@@ -241,6 +241,40 @@ $effect-color: $purple-700;
         margin-bottom: 0.5rem;
       }
       
+      // New styling for the quantity input and container
+      .quantity-container {
+        display: flex;
+        align-items: center;
+        margin: 0.75rem 0;
+        gap: 0.5rem;
+      }
+      
+      .quantity-input {
+        background-color: rgba($purple-100, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 0.375rem;
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 0.5rem;
+        width: 5rem;
+        text-align: center;
+        transition: all 0.2s ease;
+        
+        &:focus {
+          outline: none;
+          border-color: rgba(255, 255, 255, 0.6);
+          background-color: rgba($purple-100, 0.4);
+          box-shadow: 0 0 0 2px rgba($purple-300, 0.3);
+        }
+        
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+          opacity: 1;
+          height: 1.5rem;
+        }
+      }
+      
       .purchase-btn, .owned-btn {
         background-color: rgba(255, 255, 255, 0.2);
         color: white;

@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { doc, getDoc, updateDoc, arrayUnion, increment } from "firebase/firestore"
 import { onAuthStateChanged } from "firebase/auth"
@@ -14,8 +12,12 @@ import mcFlintSteel from "../../assets/items/mc_flint&steel.png"
 import triforce from "../../assets/items/triforce.jpg"
 import orangeCreamGhost from "../../assets/items/orangecream_ghost.jpg"
 import ekkoBeaters from "../../assets/items/ekko_beaters.png"
+import gtaDiamondCasino from "../../assets/items/diamond_casino.jpg"
+import joelGolf from "../../assets/items/golf_club.jpg"
+import joeItalianIce from "../../assets/items/italian_ice.jpg"
+import jinxSheriff from "../../assets/items/jinx_sheriff.jpg"
 
-const PER_CHAEWON_COIN_PRICE = 10000
+const PER_CHAEWON_COIN_PRICE = 50000
 
 const Shop = () => {
   const [creditAmount, setCreditAmount] = useState(0)
@@ -32,7 +34,7 @@ const Shop = () => {
       {
         id: "battle_pass",
         name: "BATTLE PASS",
-        price: 950,
+        price: 10000,
         category: "Special",
         image: null,
         isBattlePass: true,
@@ -45,49 +47,77 @@ const Shop = () => {
         image: chaewonCoin,
       },
       {
-        id: "gojo_eyes",
-        name: "Gojo Eyes",
-        price: 800,
+        id: "italian_ice",
+        name: "Joe's Italian Ice",
+        price: 1000,
         category: "Chill",
-        image: gojoEyes,
-      },
+        image: joeItalianIce,
+      }
     ],
     daily: [
       {
+        id: "gojo_eyes",
+        name: "Gojo Eyes",
+        price: 1000,
+        category: "Chill",
+        image: gojoEyes,
+      },
+      {
         id: "fortnite_pickaxe",
         name: "Fortnite Pickaxe",
-        price: 500,
+        price: 800,
         category: "Ight",
         image: fortnitePick,
       },
       {
         id: "mc_flint_steel",
         name: "Minecraft Flint & Steel",
-        price: 400,
+        price: 800,
         category: "Ight",
         image: mcFlintSteel,
       },
       {
         id: "triforce",
-        name: "Trinity Triforce LoL",
-        price: 1200,
+        name: "Trinity Triforce",
+        price: 1000,
         category: "Chill",
         image: triforce,
       },
       {
         id: "orange_cream_ghost",
         name: "Orange Cream Ghost Energy",
-        price: 800,
-        category: "Dope",
+        price: 1000,
+        category: "Chill",
         image: orangeCreamGhost,
       },
       {
         id: "ekko_beaters",
         name: "Ekkovision Beaters",
-        price: 500,
+        price: 800,
         category: "Ight",
         image: ekkoBeaters,
       },
+      {
+        id: "gta_diamond_casino",
+        name: "GTA Diamond Casino",
+        price: 1000,
+        category: "Chill",
+        image: gtaDiamondCasino,
+      },
+      {
+        id: "golf_club",
+        name: "Joel's Golf Club",
+        price: 800,
+        category: "Ight",
+        image: joelGolf,
+      },
+      {
+        id: "jinx_sheriff",
+        name: "Jinx's Sheriff",
+        price: 800,
+        category: "Ight",
+        image: jinxSheriff,
+      }
     ],
   }
 
@@ -158,7 +188,7 @@ const Shop = () => {
       })
       setCreditAmount((prev) => prev - totalCost)
       setUserChaewonCoins((prev) => prev + qty)
-      showTempStatus(`Purchased ${qty} Chaewon Coin${qty > 1 ? 's' : ''}!`, true)
+      showTempStatus(`Purchased ${qty} Chaewon Coin${qty > 1 ? "s" : ""}!`, true)
     } catch (error) {
       console.error(error)
       showTempStatus("Error purchasing coins. Please try again.", false)
@@ -166,7 +196,7 @@ const Shop = () => {
   }
 
   const purchaseItem = async (itemId, price, isBattlePass = false) => {
-    if (itemId === 'chaewon_coin') {
+    if (itemId === "chaewon_coin") {
       return purchaseChaewonCoins()
     }
     if (!userId) return showTempStatus("Please log in to make purchases", false)
@@ -220,7 +250,9 @@ const Shop = () => {
 
       <div className="shop-content">
         <div className="shop-section">
-          <div className="section-header"><h2>FEATURED ITEMS</h2></div>
+          <div className="section-header">
+            <h2>FEATURED ITEMS</h2>
+          </div>
           <div className="featured-items">
             <div className="battle-pass-item">
               <div className="item-details">
@@ -230,49 +262,78 @@ const Shop = () => {
                   className="purchase-btn"
                   onClick={() => purchaseItem(shopItems.featured[0].id, shopItems.featured[0].price, true)}
                   disabled={loading}
-                >Purchase</button>
+                >
+                  Purchase
+                </button>
               </div>
             </div>
-            {shopItems.featured.slice(1).map((item) => (
-              item.id === 'chaewon_coin' ? (
-                <div key={item.id} className="regular-item legendary" style={{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            {shopItems.featured.slice(1).map((item) =>
+              item.id === "chaewon_coin" ? (
+                <div
+                  key={item.id}
+                  className="regular-item legendary"
+                  style={{
+                    backgroundImage: `url(${item.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
                   <div className="item-details">
                     <h3>{item.name}</h3>
                     <p className="item-category">{item.category}</p>
                     <div className="item-price">{PER_CHAEWON_COIN_PRICE.toLocaleString()} / coin</div>
-                    <input
-                      type="number"
-                      min={1}
-                      value={chaewonQuantity}
-                      onChange={(e) => setChaewonQuantity(e.target.value)}
-                      className="quantity-input"
-                    />
-                    <button
-                      className="purchase-btn"
-                      onClick={() => purchaseItem(item.id)}
-                      disabled={loading}
-                    >Buy {chaewonQuantity}</button>
+
+                    {/* Redesigned input field with label */}
+                    <div className="quantity-container">
+                      <label htmlFor="chaewon-quantity" className="sr-only">
+                        Quantity
+                      </label>
+                      <input
+                        id="chaewon-quantity"
+                        type="number"
+                        min={1}
+                        value={chaewonQuantity}
+                        onChange={(e) => setChaewonQuantity(e.target.value)}
+                        className="quantity-input"
+                        aria-label="Quantity"
+                      />
+                      <button className="purchase-btn" onClick={() => purchaseItem(item.id)} disabled={loading}>
+                        Buy {chaewonQuantity}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div key={item.id} className={`regular-item ${item.category.toLowerCase()}`} style={{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <div
+                  key={item.id}
+                  className={`regular-item ${item.category.toLowerCase()}`}
+                  style={{
+                    backgroundImage: `url(${item.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
                   <div className="item-details">
                     <h3>{item.name}</h3>
                     <p className="item-category">{item.category}</p>
                     <div className="item-price">{item.price.toLocaleString()}</div>
                     {userOwnsItem(item.id) ? (
-                      <button className="owned-btn" disabled>Owned</button>
+                      <button className="owned-btn" disabled>
+                        Owned
+                      </button>
                     ) : (
                       <button
                         className="purchase-btn"
                         onClick={() => purchaseItem(item.id, item.price)}
                         disabled={loading}
-                      >Purchase</button>
+                      >
+                        Purchase
+                      </button>
                     )}
                   </div>
                 </div>
-              )
-            ))}
+              ),
+            )}
           </div>
         </div>
 
