@@ -1,14 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/authContext";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import { auth } from "../../firebase/firebase";
+import { signOut } from "firebase/auth"; 
+import { useNavigate } from "react-router-dom";
 import "./Settings.scss";
 
 const Settings = () => {
   const { user } = useAuth();
-  const [firstName, setFirstName] = useState(user?.firstName || "");
-  const [lastName, setLastName] = useState(user?.lastName || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+
+  
+  const navigate = useNavigate();
+
+  //fetch user settings from Firestore
+  const fetchUserSettings = async () => {
+    if (!user?.uid) return;
+    const userRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      setFirstName(data.firstName || "");
+      setLastName(data.lastName || "");
+      setEmail(user.email); // From auth
+      setDarkMode(data.darkMode || false);
+    } else {
+      setEmail(user.email); // New user with no Firestore data yet
+    }
+  };
+  
+  useEffect(() => {
+    fetchUserSettings();
+  }, [user]);
 
   // Update dark mode class on body or root div
   useEffect(() => {
@@ -19,9 +47,22 @@ const Settings = () => {
     }
   }, [darkMode]);
 
-  const handleSave = () => {
-    console.log("Settings saved:", { firstName, lastName, email, darkMode });
-    alert(`Settings saved:\nFirst Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nDark Mode: ${darkMode ? "On" : "Off"}`);
+  const handleSave = async () => {
+    if (!user?.uid) return;
+    const userRef = doc(db, "users", user.uid);
+    const updatedSettings = {
+      firstName,
+      lastName,
+      email,
+      darkMode,
+    };
+    try {
+      await setDoc(userRef, updatedSettings, { merge: true });
+      alert(`Settings saved:\nFirst Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nDark Mode: ${darkMode ? "On" : "Off"}`);
+    } catch (err) {
+      console.error("Error saving settings:", err);
+      alert("Failed to save settings.");
+    }
   };
 
   const handleProfilePicChange = (event) => {
@@ -31,7 +72,17 @@ const Settings = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Firebase signOut function
+      navigate("/"); // Redirect to login page after logout
+    } catch (err) {
+      console.error("Error during logout:", err);
+    }
+  };
+
   return (
+    
     <div className="settings-container">
       <div className="settings-box">
         <h1>Settings</h1>
@@ -43,7 +94,7 @@ const Settings = () => {
               {profilePic ? (
                 <img src={profilePic} alt="Profile" className="avatar-img" />
               ) : (
-                user?.firstName?.charAt(0).toUpperCase()
+                user?.email?.charAt(0).toUpperCase()
               )}
             </label>
             <input
@@ -76,19 +127,17 @@ const Settings = () => {
             />
           </label>
 
-          <label>
-            Email:
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
+
         </div>
 
         {/* Save Button */}
         <button onClick={handleSave} className="save-button">
           Save Changes
+        </button>
+
+        {/* Logout Button */}
+        <button onClick={handleLogout} className="signout-button">
+          Logout
         </button>
 
         {/* Dark Mode Slider */}
@@ -105,6 +154,7 @@ const Settings = () => {
           </label>
         </div>
 
+        
        
       </div>
     </div>

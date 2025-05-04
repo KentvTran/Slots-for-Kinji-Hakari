@@ -9,19 +9,12 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setCurrentUser(user);
-                setUserLoggedIn(true);
-            } else {
-                setCurrentUser(null);
-                setUserLoggedIn(false);
-            }
+            setUser(user);
             setLoading(false);
         });
 
@@ -29,10 +22,9 @@ export function AuthProvider({ children }) {
     }, []);
 
     const value = {
-        currentUser,
-        userLoggedIn,
+        user,
         loading,
-        setUser: setCurrentUser,  // ✅ Add setUser so components can update it
+        setUser,  // ✅ Add setUser so components can update it
     };
 
     return (

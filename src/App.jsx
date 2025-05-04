@@ -11,6 +11,7 @@ import ResetPassword from './components/ResetPassword/ResetPassword';
 import NewAccount from './components/NewAccount/NewAccount';
 import Settings from './components/Settings/Settings';
 import Trade from './components/Trade/Trade';
+import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/authContext';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} /> 
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/new-account" element={<NewAccount />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/trade" element={<Trade />} />
           </Routes>
         </Layout>
