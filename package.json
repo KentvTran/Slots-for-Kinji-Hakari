@@ -11,6 +11,7 @@
     "@firebase/auth": "^1.10.0",
     "@firebase/firestore": "^4.7.10",
     "base": "^3.0.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "fire": "^0.55.1",
     "firebase": "^11.6.0",
