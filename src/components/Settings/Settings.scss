@@ -112,6 +112,14 @@
     }
   }
   
+  .signout-button {
+    background-color: #e74c3c;  /* Red color for logout */
+    color: white;
+    
+    &:hover {
+      background-color: #c0392b; /* Darker red for hover effect */
+    }
+  }
   
   /* Dark Mode Styles */
   .dark-mode {
