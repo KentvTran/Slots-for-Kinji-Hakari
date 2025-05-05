@@ -7,8 +7,8 @@ import { useAuth } from '../../contexts/authContext';
 import './Layout.scss';
 
 const Layout = ({ children }) => {
-  const { userLoggedIn } = useAuth();
-
+  const { user } = useAuth();
+ 
   return (
     <div className="layout">
       <nav className="top-nav">
@@ -23,16 +23,10 @@ const Layout = ({ children }) => {
           <Link to="/leaderboards">
             <FaTrophy />
           </Link>
-
-          {userLoggedIn ? (
-            <Link to="/settings"> {/* Link to Settings if user is logged in */}
-              <CgProfile />
-            </Link>
-          ) : (
-            <Link to="/login-page"> {/* Link to Login if user is not logged in */}
-              <CgProfile />
-            </Link>
-          )}
+          
+          <Link to={user ? "/settings" : "/login-page"}> 
+            <CgProfile />
+          </Link>
         </div>
       </nav>
       <main>
