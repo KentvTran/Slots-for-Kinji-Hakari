@@ -1,5 +1,5 @@
 import Phaser from "phaser"
-import { getRandomSymbol, updateSymbol, calculateWinnings, validateBet } from "./GameLogic"
+import { getRandomSymbol, updateSymbol, calculateWinnings, validateBet } from "./gameLogic"
 import { GAME_CONFIG, REEL_CONFIG, COLORS, SYMBOLS, GAME_SETTINGS } from "./Slots"
 
 export function initializeGame({ balance, setBalance, balanceRef, updateCredits, setGameStatus, userRef }) {
