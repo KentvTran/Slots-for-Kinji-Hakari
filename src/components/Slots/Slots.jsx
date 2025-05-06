@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore"
 import { auth, db } from "../../firebase/firebase"
-import { initializeGame } from "./phaserLogic"
-import { updateCredits } from "./firebaseLogic"
-import { GameStatus } from "./uiComponents"
+import { initializeGame } from "./phaserLogic.jsx"
+import { updateCredits } from "./firebaseLogic.jsx"
+import { GameStatus } from "./uiComponents.jsx"
 import "./Slots.scss"
 
 // Game constants
