@@ -110,7 +110,7 @@ const Settings = () => {
         {/* Account Info */}
         <div className="account-info">
           <label>
-            First Name:
+            Current Password:
             <input
               type="text"
               value={firstName}
@@ -119,7 +119,7 @@ const Settings = () => {
           </label>
 
           <label>
-            Last Name:
+            New Password:
             <input
               type="text"
               value={lastName}
