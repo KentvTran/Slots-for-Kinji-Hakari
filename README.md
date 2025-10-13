@@ -7,7 +7,6 @@ Instructor: Prof. Sha Dong
 A web-based casino gaming platform featuring slot machines, a virtual item shop, player trading, and competitive leaderboards. Built with React and powered by Firebase, Hakari delivers an interactive gambling simulation experience with anime and gaming-themed aesthetics.
 
 **Live Site:** [hakari-spin.web.app](https://hakari-spin.web.app)  
-**GitHub Repository:** [Slots-for-Kinji-Hakari](https://github.com/KentvTran/Slots-for-Kinji-Hakari)
 
 ## Features
 
